@@ -1,0 +1,36 @@
+.gigs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.gigs img {
+  height: 200px;
+  max-width: 100%;
+  object-fit: scale-down;
+}
+
+.gigs p {
+  max-width: 50vw;
+  padding-bottom: 40px;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f2f2f2;
+  padding: 10px;
+}
+
+nav a {
+  color: #333;
+  text-decoration: none;
+  margin: 0 10px;
+  font-size: 18px;
+}
+
+nav a:hover {
+  color: #666;
+}

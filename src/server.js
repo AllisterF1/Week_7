@@ -3,7 +3,7 @@ require("./db/connection");
 
 const express = require("express");
 
-const Book = require("./books/model");
+const Book = require("./modbooks/model");
 
 const app = express();
 
@@ -43,8 +43,36 @@ app.post("/books/addbooks", async (req, res) => {
   }
 });
 
-app.put
 
-app.delete
 
-app.listen(5002, () => console.log("server is listening"));
+app.put("/books/updatebookauthor", async (req, res) => {
+  const title = req.body.title;
+  const newAuthor = req.body.newAuthor;
+
+  try {
+    const updatedBook = await Book.findOneAndUpdate(
+      { title: title },
+      { author: newAuthor },
+     
+    );
+
+    if (!updatedBook) {
+      return res.status(404).json({ message: "Book not found" });
+    }
+
+    const successResponse = {
+      message: "success",
+      updatedBook: updatedBook,
+    };
+
+    res.status(201).json(successResponse);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+// app.delete
+
+app.listen(5001, () => console.log("server is listening"));

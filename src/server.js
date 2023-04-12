@@ -1,116 +1,50 @@
-// const express = require("express");
-// const app = express();
-
-// app.use(express.json());
-
-// app.get("/anotherroute", (request, response) => {
-//   response.send("Hello from another route");
-// });
-
-// app.post("/book", (request, response) => {
-//   console.log(request.body);
-
-//   const newBook = {
-//     id: "1234",
-//     title: request.body.title,
-//     author: request.body.author,
-//     genre: request.body.genre,
-//   };
-
-//   const successResponse = {
-//     message: "Response sent successfully",
-//     book: book,
-//   };
-
-//     response.send(successResponse);
-// });
+require("dotenv").config();
+require("./db/connection");
 
 const express = require("express");
+
+const Book = require("./books/model");
+
 const app = express();
 
 app.use(express.json());
 
-app.get("/book", (request, response) => {
-  const book = {
-    title: "Lord of the Rings",
-    author: "Tolkein",
-    genre: "Fantasy",
-  };
+app.get("/books/getallbooks", async (req, res) => {
+  try {
+    const books = await Book.find({});
 
-  const successResponse = {
-    message: "Response sent successfully",
-    book: book,
-  };
-
-  response.send(successResponse);
-});
-
-const books = [];
-
-app.post("/book", (request, response) => {
-  const newBook = {
-    title: request.body.title,
-    author: request.body.author,
-    genre: request.body.genre,
-  };
-
-  books.push(newBook);
-  console.log(books);
-
-  const successResponse = {
-    message: "New Book added successfully",
-    book: newBook,
-  };
-
-  response.send(successResponse);
-});
-
-app.put("/book/:title", (request, response) => {
-  const title = request.params.title;
-  const updatedBook = {
-    title: request.body.title,
-    author: request.body.author,
-    genre: request.body.genre,
-  };
-
-  const index = books.findIndex((book) => book.title === title);
-
-  if (index !== -1) {
-    books[index] = { ...books[index], ...updatedBook };
     const successResponse = {
-      message: "Book updated successfully",
-      book: books[index],
+      message: "success",
+      books: books,
     };
-    console.log(books);
-    response.send(successResponse);
-  } else {
-    books.push(updatedBook);
-    const successResponse = {
-      message: "New Book added successfully",
-      book: updatedBook,
-    };
-    console.log(books);
-    response.send(successResponse);
+    res.status(200).json(successResponse);
+  } catch (error) {
+    console.log(error);
   }
 });
 
-app.delete("/book/:index", (request, response) => {
-  const index = request.params.index;
-  if (index >= 0 && index < books.length) {
-    const deletedBook = books.splice(index, 1)[0];
+app.post("/books/addbooks", async (req, res) => {
+  try {
+    //const newBook = await Book.create(req.body); this would work also
+    const newBook = await Book.create({
+      title: req.body.title,
+      author: req.body.author,
+      genre: req.body.genre,
+    });
+
     const successResponse = {
-      message: "Book deleted successfully",
-      book: deletedBook,
-    };
-    console.log(books);
-    response.send(successResponse);
-  } else {
-    const errorResponse = {
-      message: "Invalid index",
+      message: "success",
+      newBook: newBook,
     };
 
-    response.status(400).send(errorResponse);
+    res.status(201).json(successResponse);
+  } catch (error) {
+    console.log(error);
   }
 });
+
+app.put
+
+app.delete
 
 app.listen(5002, () => console.log("server is listening"));

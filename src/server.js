@@ -45,7 +45,7 @@ app.get("/book", (request, response) => {
   response.send(successResponse);
 });
 
-const books = []; 
+const books = [];
 
 app.post("/book", (request, response) => {
   const newBook = {

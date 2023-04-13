@@ -23,7 +23,7 @@ app.get("/books/getallbooks", async (req, res) => {
   }
 });
 
-app.post("/books/addbooks", async (req, res) => {
+app.post("/books/addbook", async (req, res) => {
   try {
     //const newBook = await Book.create(req.body); this would work also
     const newBook = await Book.create({
@@ -36,43 +36,35 @@ app.post("/books/addbooks", async (req, res) => {
       message: "success",
       newBook: newBook,
     };
-
     res.status(201).json(successResponse);
   } catch (error) {
     console.log(error);
   }
 });
-
 
 
 app.put("/books/updatebookauthor", async (req, res) => {
-  const title = req.body.title;
-  const newAuthor = req.body.newAuthor;
+  const updatedBook = await Book.updateOne(
+    { title: req.body.title },
+    { author: req.body.newAuthor }
+  );
+  const successResponse = {
+    message: "success",
+    updatedBook: updatedBook,
+  };
 
-  try {
-    const updatedBook = await Book.findOneAndUpdate(
-      { title: title },
-      { author: newAuthor },
-     
-    );
-
-    if (!updatedBook) {
-      return res.status(404).json({ message: "Book not found" });
-    }
-
-    const successResponse = {
-      message: "success",
-      updatedBook: updatedBook,
-    };
-
-    res.status(201).json(successResponse);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Server error" });
-  }
+  res.status(202).json(successResponse);
 });
 
+app.delete("/books/deletebook", async (req, res) => {
+  const deletedBook = await Book.deleteOne({ title: req.body.title });
 
-// app.delete
+  const successResponse = {
+    message: "success",
+    deletedBook: deletedBook,
+  };
+
+  res.status(201).json(successResponse);
+});
 
 app.listen(5001, () => console.log("server is listening"));

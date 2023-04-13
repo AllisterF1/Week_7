@@ -70,7 +70,7 @@ app.delete("/books/deletebook", async (req, res) => {
   const deletedBook = await Book.deleteOne({ title: req.body.title });
 
   const successResponse = {
-    message: "success",
+    message: "successfully deleted",
     deletedBook: deletedBook,
   };
 
@@ -93,7 +93,45 @@ app.delete("/books/deleteallbooks", async (req, res) => {
 
 
 
+//searches via title and updates any field
+app.put("/books/updateany", async (req, res) => {
+  
+    const filter = { title: req.body.title };
+    const update = { 
+      title: req.body.newTitle,
+      author: req.body.newAuthor,
+      genre: req.body.newGenre
+    };
+    const updatedBook = await Book.updateOne(filter, update);
+    const successResponse = {
+      message: "successfully updated",
+      updatedBook: updatedBook,
+    };
+    res.status(202).json(successResponse);
+ 
+});
 
+//dynamic version which searches via title and updates any field
+app.put("/books/updateanydynamic", async (req, res) => {
+  
+    const filter = { title: req.body.title };
+    const update = { $set: {} };
+    for (const key in req.body) {
+        if (key !== 'title') {
+            update.$set[key] = req.body[key];
+        }
+    }
+    update.$set.title = req.body.newTitle;
+    update.$set.author = req.body.newAuthor;
+    update.$set.genre = req.body.newGenre; 
+    const updatedBook = await Book.updateMany(filter, update);
+    const successResponse = {
+      message: "successfully updated",
+      updatedBook: updatedBook,
+    };
+    res.status(202).json(successResponse);
+ 
+});
 
 
 app.listen(5001, () => console.log("server is listening"));

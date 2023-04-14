@@ -111,27 +111,48 @@ app.put("/books/updateany", async (req, res) => {
  
 });
 
-//dynamic version which searches via title and updates any field
-app.put("/books/updateanydynamic", async (req, res) => {
+//dynamic version which searches via title and updates any field doesnt work
+// app.put("/books/updateanydynamic", async (req, res) => {
   
-    const filter = { title: req.body.title };
-    const update = { $set: {} };
-    for (const key in req.body) {
-        if (key !== 'title') {
-            update.$set[key] = req.body[key];
-        }
-    }
-    update.$set.title = req.body.newTitle;
-    update.$set.author = req.body.newAuthor;
-    update.$set.genre = req.body.newGenre; 
-    const updatedBook = await Book.updateMany(filter, update);
-    const successResponse = {
-      message: "successfully updated",
-      updatedBook: updatedBook,
-    };
-    res.status(202).json(successResponse);
+//     const filter = { title: req.body.title };
+//     const update = { $set: {} };
+//     const value = req.body.value;
+
+//     for (const key in req.body) {
+//         if (key !== 'title') {
+//             update.$set[key] = req.body[value];
+//         }
+//     }
+
+//     const updatedBook = await Book.updateMany(filter, update);
+//     const successResponse = {
+//       message: "successfully updated",
+//       updatedBook: updatedBook,
+//     };
+//     res.status(202).json(successResponse);
  
+// });
+
+//works as get success message but can't seem to get JSON body to actaully update so must be an error in what I'm sending
+app.put("/books/updateanydynamic", async (req, res) => {
+  const filter = { title: req.body.title };
+  const update = { $set: {} };
+
+  for (const key in req.body) {
+    if (key !== 'title') {
+      update.$set[key] = req.body[key];
+    }
+  }
+
+  const updatedBook = await Book.updateMany(filter, update);
+  const successResponse = {
+    message: "successfully updated",
+    updatedBook: updatedBook,
+  };
+  res.status(202).json(successResponse);
 });
+
+
 
 
 app.listen(5001, () => console.log("server is listening"));

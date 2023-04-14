@@ -21,7 +21,7 @@ const addNewBook = async (req, res) => {
       genre: req.body.genre,
     });
 
-    res.status(201).json({ message: "success", newBook: newbook });
+    res.status(201).json({ message: "success", newBook: newBook });
   } catch (error) {
     console.log(error);
   }

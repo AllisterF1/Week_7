@@ -96,7 +96,7 @@ const updateAnyByTitle = async (req, res) => {
   }
 };
 
-//dynamic version which searches via title and updates any field
+//dynamic version which searches via title and updates any field. Title changes require use of newAuthor in body
 const updateAnyDynamic = async (req, res) => {
   try {
     const filter = { title: req.body.title };
@@ -107,8 +107,6 @@ const updateAnyDynamic = async (req, res) => {
       }
     }
     update.$set.title = req.body.newTitle;
-    update.$set.author = req.body.newAuthor;
-    update.$set.genre = req.body.newGenre;
     const updatedBook = await Book.updateMany(filter, update);
 
     res
